@@ -1,0 +1,7 @@
+<?php // echo $this->showTemplateVars(); ?>
+
+<?php if ($this->headline): ?>
+<<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
+<?php endif; ?>
+
+<a href="<?php echo $this->ical_url; ?>"><img width="48" height="48" src="system/modules/cp_event_ical/assets/file_ical.png" title="Download iCal" alt="Download iCal"> iCal-Export</a>

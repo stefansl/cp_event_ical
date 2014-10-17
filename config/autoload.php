@@ -3,7 +3,7 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2013 Leo Feyer
+ * Copyright (c) 2005-2014 Leo Feyer
  *
  * @package Cp_event_ical
  * @link    https://contao.org
@@ -12,19 +12,18 @@
 
 
 /**
- * Register the namespaces
- */
-ClassLoader::addNamespaces(array
-(
-	'Clickpress',
-));
-
-
-/**
  * Register the classes
  */
 ClassLoader::addClasses(array
 (
-	// Classes
-	'Clickpress\ModuleEventIcal\ModuleEventIcal' => 'system/modules/cp_event_ical/classes/ModuleEventIcal.php',
+	'ModuleExportIcal' => 'system/modules/cp_event_ical/ModuleExportIcal.php',
+));
+
+
+/**
+ * Register the templates
+ */
+TemplateLoader::addFiles(array
+(
+	'mod_export_ical' => 'system/modules/cp_event_ical/templates',
 ));
