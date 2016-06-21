@@ -2,7 +2,7 @@
 
 
 define('TL_MODE', 'FE');
-require_once '../../initialize.php';
+require_once '../../../initialize.php';
 
 
 /**
@@ -45,11 +45,11 @@ class ExportIcal extends Frontend
 
     
         // require files
-        require_once 'vendor/iCal/src/Eluceo/iCal/Component.php';
-        require_once 'vendor/iCal/src/Eluceo/iCal/PropertyBag.php';
-        require_once 'vendor/iCal/src/Eluceo/iCal/Property.php';
-        require_once 'vendor/iCal/src/Eluceo/iCal/Component/Calendar.php';
-        require_once 'vendor/iCal/src/Eluceo/iCal/Component/Event.php';
+        require_once '../vendor/iCal/src/Eluceo/iCal/Component.php';
+        require_once '../vendor/iCal/src/Eluceo/iCal/PropertyBag.php';
+        require_once '../vendor/iCal/src/Eluceo/iCal/Property.php';
+        require_once '../vendor/iCal/src/Eluceo/iCal/Component/Calendar.php';
+        require_once '../vendor/iCal/src/Eluceo/iCal/Component/Event.php';
 
         // set default timezone (PHP 5.4)
         date_default_timezone_set('Europe/Berlin');

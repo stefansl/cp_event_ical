@@ -57,7 +57,7 @@ class ModuleExportIcal extends Events
 			->limit(1)
 			->execute((is_numeric($this->Input->get('events')) ? $this->Input->get('events') : 0), $this->Input->get('events'), $time, $time);
 
-		$this->Template->ical_url = TL_PATH . '/system/modules/cp_event_ical/exportIcal.php?id=' . $objEvent->id;
+		$this->Template->ical_url = TL_PATH . '/system/modules/cp_event_ical/export/exportIcal.php?id=' . $objEvent->id;
 
 	}
 
