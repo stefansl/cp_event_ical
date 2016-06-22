@@ -34,8 +34,6 @@ class ExportIcal extends Frontend
     public function export()
     {
 
-        global $objPage;
-
         $time = time();
 
         // Get the current event
@@ -43,11 +41,12 @@ class ExportIcal extends Frontend
             ->limit(1)
             ->execute((is_numeric($this->Input->get('id')) ? $this->Input->get('id') : 0), $this->Input->get('id'), $time, $time);
 
-    
+
         // require files
         require_once __DIR__ . '/../vendor/autoload.php';
 
         // set default timezone (PHP 5.4)
+        // Todo: set timezone dynamically
         date_default_timezone_set('Europe/Berlin');
 
         // 1. Create new calendar
@@ -57,13 +56,39 @@ class ExportIcal extends Frontend
         $vEvent = new \Eluceo\iCal\Component\Event();
         $vEvent->setDtStart(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->startTime)));
         $vEvent->setDtEnd(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->endTime)));
-        $vEvent->setNoTime(false);
-        $vEvent->setLocation($objEvent->cep_location);
+
+        if($objEvent->addTime) {
+            $vEvent->setNoTime(false);
+        }else {
+            $vEvent->setNoTime(true);
+        }
+
+
+        // Compatibility calendarextended
+        if($objEvent->cep_location) {
+            $vEvent->setLocation($objEvent->cep_location);
+        }
+
         $vEvent->setSummary($objEvent->title);
         $vEvent->setDescription(strip_tags($objEvent->teaser));
 
+        if($objEvent->recurring) {
+            $repeatEach = deserialize($objEvent->repeatEach);
+
+            $freq = array(
+                'days' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_DAILY,
+                'weeks' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_WEEKLY,
+                'months' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_MONTHLY,
+                'years' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_YEARLY,
+            );
+            $recurrenceRule = new \Eluceo\iCal\Property\Event\RecurrenceRule();
+            $recurrenceRule->setFreq($freq[$repeatEach['unit']]);
+            $recurrenceRule->setInterval($repeatEach['value']);
+            $vEvent->setRecurrenceRule($recurrenceRule);
+        }
+        
         // Adding Timezone (optional)
-        $vEvent->setUseTimezone(false);
+        $vEvent->setUseTimezone(true);
 
         // 3. Add event to calendar
         $vCalendar->addComponent($vEvent);
