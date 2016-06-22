@@ -30,6 +30,11 @@
 		"contao-legacy/cp_event_ical": "self.version",
 		"clickpress/cp_event_ical": "self.version"
 	},
+	"config": {
+		"preferred-install": {
+			"*": "vendor"
+		}
+	},
 	"extra": {
 		"contao": {
 			"sources": {
