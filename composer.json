@@ -1,0 +1,40 @@
+{
+
+	"name": "stefansl/cp_event_ical",
+	"description": "Export single events as iCal",
+	"keywords": ["contao", "extension", "iCal", "events", "export"],
+	"type": "contao-module",
+	"homepage": "https://github.com/stefansl/cp_event_ical",
+	"license": "LGPL-3.0+",
+	"authors": [
+		{
+			"name": "Stefan Schulz-Lauterbach",
+			"homepage": "http://clickpress.de",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/stefansl/cp_event_ical/issues",
+		"source": "https://github.com/stefansl/cp_event_ical"
+	},
+	"require": {
+		"php": ">=5.4",
+		"eluceo/ical": "~0.6"
+	},
+	"autoload": {
+		"classmap": [
+			"vendor/"
+		]
+	},
+	"replace": {
+		"contao-legacy/cp_event_ical": "self.version",
+		"clickpress/cp_event_ical": "self.version"
+	},
+	"extra": {
+		"contao": {
+			"sources": {
+				"": "system/modules/cp_event_ical"
+			}
+		}
+	}
+}

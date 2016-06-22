@@ -45,11 +45,7 @@ class ExportIcal extends Frontend
 
     
         // require files
-        require_once '../vendor/iCal/src/Eluceo/iCal/Component.php';
-        require_once '../vendor/iCal/src/Eluceo/iCal/PropertyBag.php';
-        require_once '../vendor/iCal/src/Eluceo/iCal/Property.php';
-        require_once '../vendor/iCal/src/Eluceo/iCal/Component/Calendar.php';
-        require_once '../vendor/iCal/src/Eluceo/iCal/Component/Event.php';
+        require_once __DIR__ . '/../vendor/autoload.php';
 
         // set default timezone (PHP 5.4)
         date_default_timezone_set('Europe/Berlin');
@@ -61,16 +57,16 @@ class ExportIcal extends Frontend
         $vEvent = new \Eluceo\iCal\Component\Event();
         $vEvent->setDtStart(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->startTime)));
         $vEvent->setDtEnd(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->endTime)));
-        $vEvent->setNoTime(true);
+        $vEvent->setNoTime(false);
         $vEvent->setLocation($objEvent->cep_location);
         $vEvent->setSummary($objEvent->title);
-        $vEvent->setDescription($objEvent->title);
+        $vEvent->setDescription(strip_tags($objEvent->teaser));
 
         // Adding Timezone (optional)
         $vEvent->setUseTimezone(false);
 
         // 3. Add event to calendar
-        $vCalendar->addEvent($vEvent);
+        $vCalendar->addComponent($vEvent);
 
         // 4. Set headers
         header('Content-Type: text/calendar; charset=utf-8');
