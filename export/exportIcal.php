@@ -8,8 +8,7 @@ require_once '../../../initialize.php';
 /**
  * Class ExportIcal
  *
- * Cron job controller.
- * @copyright  Stefan Schulz-Lauterbach 2005-2013
+ * @copyright  Stefan Schulz-Lauterbach 2016
  * @author     Stefan Schulz-Lauterbach <https://clickpress.de>
  * @package    Controller
  */
