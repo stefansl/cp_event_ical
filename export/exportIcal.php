@@ -61,7 +61,7 @@ class ExportIcal extends Frontend
         if ($objEvent->endTime != null) {
             $objEvent->endTime = $objEvent->endTime + 86400;
         }
-        
+
         // 1. Create new calendar
         $vCalendar = new \Eluceo\iCal\Component\Calendar('Contao webCMS');
 
@@ -75,7 +75,6 @@ class ExportIcal extends Frontend
         } else {
             $vEvent->setNoTime(true);
         }
-
 
         // Compatibility calendarextended
         if ($objEvent->cep_location) {
@@ -106,9 +105,11 @@ class ExportIcal extends Frontend
         // 3. Add event to calendar
         $vCalendar->addComponent($vEvent);
 
+        $filename = (!empty($objEvent->alias)) ? $objEvent->alias : standardize($objEvent->title);
+
         // 4. Set headers
         header('Content-Type: text/calendar; charset=utf-8');
-        header('Content-Disposition: attachment; filename="' . $objEvent->alias . '.ics"');
+        header('Content-Disposition: attachment; filename="' . $filename . '.ics"');
 
         // 5. Output
         echo $vCalendar->render();
