@@ -36,9 +36,17 @@ class ExportIcal extends Frontend
         $time = time();
 
         // Get the current event
-        $objEvent = $this->Database->prepare("SELECT *, author AS authorId, (SELECT title FROM tl_calendar WHERE tl_calendar.id=tl_calendar_events.pid) AS calendar, (SELECT name FROM tl_user WHERE id=author) author FROM tl_calendar_events WHERE (id=? OR alias=?)" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1" : ""))
+        $objEvent = $this->Database->prepare(
+            "SELECT *, author AS authorId, (SELECT title FROM tl_calendar WHERE tl_calendar.id=tl_calendar_events.pid) AS calendar, (SELECT name FROM tl_user WHERE id=author) author FROM tl_calendar_events WHERE (id=? OR alias=?)"
+            . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1" : "")
+        )
             ->limit(1)
-            ->execute((is_numeric($this->Input->get('id')) ? $this->Input->get('id') : 0), $this->Input->get('id'), $time, $time);
+            ->execute(
+                (is_numeric($this->Input->get('id')) ? $this->Input->get('id') : 0),
+                $this->Input->get('id'),
+                $time,
+                $time
+            );
 
 
         // require files
@@ -50,7 +58,7 @@ class ExportIcal extends Frontend
 
         // Todo: correct enddate, if multi-day
         // not final
-        if($objEvent->endTime != null) {
+        if ($objEvent->endTime != null) {
             $objEvent->endTime = $objEvent->endTime + 86400;
         }
         
@@ -62,36 +70,36 @@ class ExportIcal extends Frontend
         $vEvent->setDtStart(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->startTime)));
         $vEvent->setDtEnd(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->endTime)));
 
-        if($objEvent->addTime) {
+        if ($objEvent->addTime) {
             $vEvent->setNoTime(false);
-        }else {
+        } else {
             $vEvent->setNoTime(true);
         }
 
 
         // Compatibility calendarextended
-        if($objEvent->cep_location) {
+        if ($objEvent->cep_location) {
             $vEvent->setLocation($objEvent->cep_location);
         }
 
         $vEvent->setSummary($objEvent->title);
         $vEvent->setDescription(strip_tags($objEvent->teaser));
 
-        if($objEvent->recurring) {
+        if ($objEvent->recurring) {
             $repeatEach = deserialize($objEvent->repeatEach);
 
-            $freq = array(
-                'days' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_DAILY,
-                'weeks' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_WEEKLY,
+            $freq           = array(
+                'days'   => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_DAILY,
+                'weeks'  => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_WEEKLY,
                 'months' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_MONTHLY,
-                'years' => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_YEARLY,
+                'years'  => \Eluceo\iCal\Property\Event\RecurrenceRule::FREQ_YEARLY,
             );
             $recurrenceRule = new \Eluceo\iCal\Property\Event\RecurrenceRule();
             $recurrenceRule->setFreq($freq[$repeatEach['unit']]);
             $recurrenceRule->setInterval($repeatEach['value']);
             $vEvent->setRecurrenceRule($recurrenceRule);
         }
-        
+
         // Adding Timezone (optional)
         $vEvent->setUseTimezone(true);
 
@@ -100,7 +108,7 @@ class ExportIcal extends Frontend
 
         // 4. Set headers
         header('Content-Type: text/calendar; charset=utf-8');
-        header('Content-Disposition: attachment; filename="' . $objEvent->alias .  '.ics"');
+        header('Content-Disposition: attachment; filename="' . $objEvent->alias . '.ics"');
 
         // 5. Output
         echo $vCalendar->render();
@@ -109,7 +117,7 @@ class ExportIcal extends Frontend
 }
 
 
-$objExp =   new ExportIcal();
+$objExp = new ExportIcal();
 $objExp->export();
 
 ?>
