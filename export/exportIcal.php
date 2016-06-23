@@ -54,21 +54,20 @@ class ExportIcal extends Frontend
 
         // set default timezone (PHP 5.4)
         // Todo: set timezone dynamically
-        date_default_timezone_set('Europe/Berlin');
+        $tz  = 'Europe/Berlin';
+        $dtz = new \DateTimeZone($tz);
+        date_default_timezone_set($tz);
 
-        // Todo: correct enddate, if multi-day
-        // not final
-        if ($objEvent->endTime != null) {
-            $objEvent->endTime = $objEvent->endTime + 86400;
-        }
+        // correct enddate, if multi-day
+        $objEvent->endTime += (null == $objEvent->addTime) ? 86400 : 0;
 
         // 1. Create new calendar
         $vCalendar = new \Eluceo\iCal\Component\Calendar('Contao webCMS');
 
         // 2. Create an event
         $vEvent = new \Eluceo\iCal\Component\Event();
-        $vEvent->setDtStart(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->startTime)));
-        $vEvent->setDtEnd(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->endTime)));
+        $vEvent->setDtStart(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->startTime),$dtz));
+        $vEvent->setDtEnd(new \DateTime(date('Y-m-d\TH:i:sP', $objEvent->endTime),$dtz));
 
         if ($objEvent->addTime) {
             $vEvent->setNoTime(false);
