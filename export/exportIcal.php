@@ -48,6 +48,12 @@ class ExportIcal extends Frontend
         // Todo: set timezone dynamically
         date_default_timezone_set('Europe/Berlin');
 
+        // Todo: correct enddate, if multi-day
+        // not final
+        if($objEvent->endTime != null) {
+            $objEvent->endTime = $objEvent->endTime + 86400;
+        }
+        
         // 1. Create new calendar
         $vCalendar = new \Eluceo\iCal\Component\Calendar('Contao webCMS');
 
